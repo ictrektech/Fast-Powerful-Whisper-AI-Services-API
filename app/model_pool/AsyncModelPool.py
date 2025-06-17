@@ -143,8 +143,8 @@ class AsyncModelPool:
         self.fast_whisper_download_root = faster_whisper_download_root
 
         self.min_size = min_size
-        self.max_size = self.get_optimal_max_size(max_size)
         self.max_instances_per_gpu = max_instances_per_gpu
+        self.max_size = self.get_optimal_max_size(max_size)
         self.init_with_max_pool_size = init_with_max_pool_size
         self.pool = Queue(maxsize=self.max_size)
         self.current_size = 0
