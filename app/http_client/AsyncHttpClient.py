@@ -187,6 +187,7 @@ class AsyncHttpClient:
         """
         async with self.semaphore:
             try:
+                self.aclient.headers["Referer"] = url
                 async with self.aclient.stream("GET", url) as response:
                     response.raise_for_status()
                     with open(save_path, "wb") as file:
