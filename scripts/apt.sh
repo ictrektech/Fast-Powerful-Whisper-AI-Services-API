@@ -1,29 +1,59 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
 
-apt update && apt install ffmpeg -y
+# 基础：ffmpeg
+apt-get update
+apt-get install -y ffmpeg
+rm -rf /var/lib/apt/lists/*
 
-
-case "$PROFILE" in
+case "${PROFILE:-cpu}" in
   cu124)
     echo "apt: cu124"
-    apt install -y python3.12 python3-venv python3-dev python3-pip
-    python3.12 -m ensurepip
-    python3.12 -m pip install --upgrade pip
-    pip3 config set global.index-url http://mirrors.cloud.tencent.com/pypi/simple
-    pip3 config set global.trusted-host mirrors.cloud.tencent.com
-    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+
+    # 直接尝试获取 python3.12（Ubuntu 成功；非 Ubuntu 也不会卡死）
+    apt-get update
+    apt-get install -y software-properties-common ca-certificates gnupg || true
+    add-apt-repository -y ppa:deadsnakes/ppa || true
+    apt-get update || true
+
+    # 尝试安装 3.12；失败就退回系统 python3
+    if apt-get install -y python3.12 python3.12-venv python3.12-dev; then
+      PY=python3.12
+    else
+      apt-get install -y python3 python3-venv python3-dev python3-pip
+      PY=python3
+    fi
+    rm -rf /var/lib/apt/lists/*
+
+    # 保证 pip 可用并升级
+    $PY -m ensurepip --upgrade || true
+    $PY -m pip install --upgrade pip
+
+    # 镜像源 & 安装 CUDA 12.4 的 torch
+    $PY -m pip config set global.index-url http://mirrors.cloud.tencent.com/pypi/simple
+    $PY -m pip config set global.trusted-host mirrors.cloud.tencent.com
+    $PY -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
     ;;
   cpu)
     echo "apt: cpu"
-    pip3 config set global.index-url http://mirrors.cloud.tencent.com/pypi/simple
-    pip3 config set global.trusted-host mirrors.cloud.tencent.com
-    pip install torch torchvision torchaudio
+    # CPU 情况下直接用已有 python
+    if command -v python3 >/dev/null 2>&1; then PY=python3; else PY=python; fi
+    $PY -m pip install --upgrade pip
+    $PY -m pip config set global.index-url http://mirrors.cloud.tencent.com/pypi/simple
+    $PY -m pip config set global.trusted-host mirrors.cloud.tencent.com
+    $PY -m pip install torch torchvision torchaudio
     ;;
   l4t)
     echo "apt: l4t"
+    # Jetson/L4T 通常已带 PyTorch，按需补充
+    if command -v python3 >/dev/null 2>&1; then PY=python3; else PY=python; fi
     ;;
   *)
+    echo "apt: default (${PROFILE:-})"
+    if command -v python3 >/dev/null 2>&1; then PY=python3; else PY=python; fi
     ;;
 esac
 
-pip3 install -r requirements.txt
+# 项目依赖
+$PY -m pip install -r requirements.txt
