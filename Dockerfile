@@ -1,4 +1,3 @@
-# BASE_IMAGE 只在 FROM 用，不必再声明第二次
 ARG BASE_IMAGE="swr.cn-southwest-2.myhuaweicloud.com/ictrek/ubuntu:amd_22.04"
 FROM ${BASE_IMAGE}
 
@@ -20,6 +19,6 @@ COPY . /root/whisper/
 
 WORKDIR /root/whisper
 
-RUN bash scripts/apt.sh
+RUN PROFILE=$PROFILE bash scripts/apt.sh
 
 CMD ["python3", "start.py"]

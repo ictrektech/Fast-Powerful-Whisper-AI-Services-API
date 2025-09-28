@@ -1,7 +1,6 @@
 #!/bin/bash
 
-apt update && apt install ffmpeg
-
+apt update && apt install ffmpeg -y
 
 
 case "$PROFILE" in
