@@ -21,4 +21,6 @@ WORKDIR /root/whisper
 
 RUN PROFILE=$PROFILE bash scripts/apt.sh
 
+EXPOSE 80
+
 CMD ["python3", "start.py"]
