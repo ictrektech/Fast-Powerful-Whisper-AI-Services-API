@@ -122,7 +122,7 @@ class Settings:
         # 模型worker数 | Model worker count
         faster_whisper_num_workers: int = 1
         # 模型下载根目录 | Model download root directory
-        faster_whisper_download_root: Optional[str] = None
+        faster_whisper_download_root: Optional[str] = "/root/model"
 
     # 异步模型池设置 | Asynchronous model pool settings
     class AsyncModelPoolSettings:

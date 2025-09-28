@@ -22,6 +22,7 @@ case "$PROFILE" in
     ;;
   l4t)
     echo "apt: l4t"
+    ;;
   *)
     ;;
 esac
