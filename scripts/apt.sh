@@ -49,7 +49,11 @@ case "${PROFILE:-cpu}" in
     if command -v python3 >/dev/null 2>&1; then PY=python3; else PY=python; fi
     $PY -m pip config set global.index-url http://mirrors.cloud.tencent.com/pypi/simple
     $PY -m pip config set global.trusted-host mirrors.cloud.tencent.com
-    $PY -m pip install https://gh-proxy.com/https://github.com/ultralytics/assets/releases/download/v0.0.0/onnxruntime_gpu-1.20.0-cp310-cp310-linux_aarch64.whl
+    $PY -m pip install https://gh-proxy.com/https://github.com/ultralytics/assets/releases/download/v0.0.0/onnxruntime_gpu-1.20.0-cp310-cp310-linux_aarch64.whl \
+      --index-url http://mirrors.cloud.tencent.com/pypi/simple \
+      --no-extra-index-url \
+      --trusted-host mirrors.cloud.tencent.com \
+      --timeout 120 --retries 5
     if command -v python3 >/dev/null 2>&1; then PY=python3; else PY=python; fi
     ;;
   *)
