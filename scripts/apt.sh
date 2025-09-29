@@ -63,4 +63,9 @@ case "${PROFILE:-cpu}" in
 esac
 
 # 项目依赖
-$PY -m pip install -r requirements.txt --index-url http://mirrors.cloud.tencent.com/pypi/simple
+PIP_INDEX_URL=http://mirrors.cloud.tencent.com/pypi/simple \
+PIP_EXTRA_INDEX_URL= \
+$PY -m pip install -r requirements.txt \
+  --index-url http://mirrors.cloud.tencent.com/pypi/simple \
+  --trusted-host mirrors.cloud.tencent.com \
+  --timeout 120 --retries 8
