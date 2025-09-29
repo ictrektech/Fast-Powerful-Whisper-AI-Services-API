@@ -66,14 +66,10 @@ DATE=$(date +%Y%m%d)
 # 1) 拿到重定向 Location 里的 tag
 # 2) 去掉 CR
 # 3) 只保留数字和点
-VERSION=$(
-  curl -fsSI https://github.com/Evil0ctal/Fast-Powerful-Whisper-AI-Services-API/releases/latest \
-  | tr -d '\r' \
-  | awk -F': ' '/^location:/I{print $2}' \
-  | awk -F/ 'NF{print $NF; exit}' \
-  | sed -E 's/^[vV]//; s/[^0-9.].*$//' \
-  | tr -cd '0-9.'
-)
+VERSION=$(curl -s https://api.github.com/repos/Evil0ctal/Fast-Powerful-Whisper-AI-Services-API/releases/latest \
+  | jq -r .tag_name \
+  | sed 's/^v//' \
+  | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
 : "${VERSION:=0.0.0}"
 
 # 再做一次保险：删掉所有空白字符（包括残留的 \n \t）
