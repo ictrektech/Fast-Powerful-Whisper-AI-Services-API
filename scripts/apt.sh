@@ -63,4 +63,4 @@ case "${PROFILE:-cpu}" in
 esac
 
 # 项目依赖
-$PY -m pip install -r requirements.txt
+$PY -m pip install -r requirements.txt --index-url http://mirrors.cloud.tencent.com/pypi/simple
