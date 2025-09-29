@@ -18,12 +18,10 @@ case "${PROFILE:-cpu}" in
     apt-get update || true
 
     # 尝试安装 3.12；失败就退回系统 python3
-    if apt-get install -y python3.12 python3.12-venv python3.12-dev; then
-      PY=python3.12
-    else
-      apt-get install -y python3 python3-venv python3-dev python3-pip
-      PY=python3
-    fi
+
+    apt-get install -y python3 python3-venv python3-dev python3-pip build-essential \
+      gcc g++ make
+    PY=python3
     rm -rf /var/lib/apt/lists/*
 
     # 保证 pip 可用并升级
