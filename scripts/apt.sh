@@ -49,6 +49,8 @@ case "${PROFILE:-cpu}" in
     ;;
   *)
     echo "apt: default (${PROFILE:-})"
+    $PY -m pip config set global.index-url http://mirrors.cloud.tencent.com/pypi/simple
+    $PY -m pip config set global.trusted-host mirrors.cloud.tencent.com
     if command -v python3 >/dev/null 2>&1; then PY=python3; else PY=python; fi
     ;;
 esac
