@@ -46,6 +46,7 @@ case "${PROFILE:-cpu}" in
   l4t)
     echo "apt: l4t"
     # Jetson/L4T 通常已带 PyTorch，按需补充
+    if command -v python3 >/dev/null 2>&1; then PY=python3; else PY=python; fi
     $PY -m pip config set global.index-url http://mirrors.cloud.tencent.com/pypi/simple
     $PY -m pip config set global.trusted-host mirrors.cloud.tencent.com
     $PY -m pip install https://github.com/ultralytics/assets/releases/download/v0.0.0/onnxruntime_gpu-1.20.0-cp310-cp310-linux_aarch64.whl
